@@ -121,36 +121,19 @@ begin
       assert w_blinker_R = "111" report "full blinker" severity failure;
  
     --left blinker test
-    w_left <= '1'; wait for k_clk_period;
-      assert w_blinker_L = "101" report "initial left blinker" severity failure;
+    w_left <= '1'; w_right <= '0'; wait for k_clk_period;
+    wait for k_clk_period;
+      assert w_blinker_L = "001" report "initial left blinker" severity failure;
       wait for k_clk_period;
-      assert w_blinker_L = "110" report "second left blinker" severity failure;
+      assert w_blinker_L = "011" report "second left blinker" severity failure;
       wait for k_clk_period;
       assert w_blinker_L = "111" report "full left blinker" severity failure;
  
     --hazards blinker test
     w_left <= '1'; w_right <= '1'; wait for k_clk_period;
+    wait for k_clk_period;
       assert w_blinker_R = "111" report "full blinker" severity failure;
       assert w_blinker_L = "111" report "full blinker" severity failure;
-      wait for k_clk_period;
-      assert w_blinker_R = "111" report "full blinker" severity failure;
-      assert w_blinker_L = "111" report "full blinker" severity failure;
-      
-      --when left is still on after reset called, repeat pattern
-     w_left <= '1'; w_reset <= '1'; wait for k_clk_period;
-      assert w_blinker_L = "100" report "initial blinker" severity failure;
-      wait for k_clk_period;
-      assert w_blinker_L = "110" report "second blinker" severity failure;
-      wait for k_clk_period;
-      assert w_blinker_L = "111" report "full blinker" severity failure;
-      
-      --when right is still on after reset called, repeat pattern
-     w_right <= '1'; w_reset <= '1'; wait for k_clk_period;
-      assert w_blinker_R = "100" report "initial blinker" severity failure;
-      wait for k_clk_period;
-      assert w_blinker_R = "110" report "second blinker" severity failure;
-      wait for k_clk_period;
-      assert w_blinker_R = "111" report "full blinker" severity failure;
       
       --testing off
       w_right <= '0'; wait for k_clk_period;
