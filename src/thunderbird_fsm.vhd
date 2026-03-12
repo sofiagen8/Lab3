@@ -108,6 +108,7 @@ begin
 	f_Q_next(1) <= (not f_Q(2) and not f_Q(1) and not f_Q(0) and not i_left and i_right) or (f_Q(1) and not f_Q(0)) or (f_Q(2) and not f_Q(1) and f_Q(0));
 	f_Q_next(2) <= (not f_Q(2) and not f_Q(1) and not f_Q(0) and i_left and not i_right) or (not f_Q(2) and f_Q(1) and f_Q(0)) or (f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and f_Q(1) and not f_Q(0));
         
+    --assigned each bit of each light to be on for all required conditions
     o_lights_L(0) <= (f_Q(2) and not f_Q(1) and f_Q(0)) or (f_Q(2) and f_Q(1) and not f_Q(0)) or (f_Q(2) and f_Q(1) and f_Q(0)) or (not f_Q(2) and not f_Q(1) and f_Q(0) and i_left and i_right);
     o_lights_L(1) <= (f_Q(2) and f_Q(1) and not f_Q(0)) or (f_Q(2) and f_Q(1) and f_Q(0))or (not f_Q(2) and not f_Q(1) and f_Q(0) and i_left and i_right);
     o_lights_L(2) <= (f_Q(2) and f_Q(1) and f_Q(0))or (not f_Q(2) and not f_Q(1) and f_Q(0) and i_left and i_right);
@@ -117,7 +118,7 @@ begin
     ---------------------------------------------------------------------------------
 	
 	-- PROCESSES --------------------------------------------------------------------
-    register_proc : process (i_clk, i_reset) --not sure if this process if correct, copy/pasted from ICE4
+    register_proc : process (i_clk, i_reset)
     begin
         if i_reset = '1' then
             f_Q <= "000"; --reset lights to off

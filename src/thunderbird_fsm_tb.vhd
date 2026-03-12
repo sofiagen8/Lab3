@@ -84,7 +84,7 @@ begin
           i_clk => w_clk,
           i_left => w_left,
           i_right => w_right,
-          o_lights_L => w_blinker_L, --no idea if this works, but come back to if logic/runtime errors
+          o_lights_L => w_blinker_L,
           o_lights_R => w_blinker_R
         );
 	-----------------------------------------------------
@@ -102,7 +102,7 @@ begin
 	-- Simulation process
 	-- Use 220 ns for simulation
 	sim_proc: process
-	begin --ALL TEST BENCHES BELOW ARE COPY/PASTED FROM ICE4
+	begin
 		-- sequential timing		
 		w_reset <= '1';
 		wait for k_clk_period*1;
@@ -112,7 +112,7 @@ begin
 		w_reset <= '0';
 		wait for k_clk_period*1;
 		
-		-- right blinker test
+		-- right blinker test --need to create more test benches--left off here
     w_right <= '1'; wait for k_clk_period;
       assert w_blinker_R = "001" report "initial blinker" severity failure;
       wait for k_clk_period;
@@ -120,6 +120,47 @@ begin
       wait for k_clk_period;
       assert w_blinker_R = "111" report "full blinker" severity failure;
  
+    --left blinker test
+    w_left <= '1'; wait for k_clk_period;
+      assert w_blinker_L = "100" report "initial blinker" severity failure;
+      wait for k_clk_period;
+      assert w_blinker_L = "110" report "second blinker" severity failure;
+      wait for k_clk_period;
+      assert w_blinker_L = "111" report "full blinker" severity failure;
+ 
+    --hazards blinker test
+    w_left <= '1'; w_right <= '1'; wait for k_clk_period;
+      assert w_blinker_R = "111" report "full blinker" severity failure;
+      assert w_blinker_L = "111" report "full blinker" severity failure;
+      wait for k_clk_period;
+      assert w_blinker_R = "111" report "full blinker" severity failure;
+      assert w_blinker_L = "111" report "full blinker" severity failure;
+      
+      --when left is still on after reset called, repeat pattern
+     w_left <= '1'; w_reset <= '1'; wait for k_clk_period;
+      assert w_blinker_L = "100" report "initial blinker" severity failure;
+      wait for k_clk_period;
+      assert w_blinker_L = "110" report "second blinker" severity failure;
+      wait for k_clk_period;
+      assert w_blinker_L = "111" report "full blinker" severity failure;
+      
+      --when right is still on after reset called, repeat pattern
+     w_right <= '1'; w_reset <= '1'; wait for k_clk_period;
+      assert w_blinker_R = "100" report "initial blinker" severity failure;
+      wait for k_clk_period;
+      assert w_blinker_R = "110" report "second blinker" severity failure;
+      wait for k_clk_period;
+      assert w_blinker_R = "111" report "full blinker" severity failure;
+      
+      --testing off
+      w_right <= '0'; wait for k_clk_period;
+      assert w_blinker_R = "000" report "blinker off" severity failure;
+       
+      w_left <= '0'; wait for k_clk_period;
+      assert w_blinker_L = "000" report "blinker off" severity failure;
+      
+      
+      
 		wait;
 	end process;
 	-----------------------------------------------------
