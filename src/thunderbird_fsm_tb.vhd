@@ -106,35 +106,20 @@ begin
 		-- sequential timing		
 		w_reset <= '1';
 		wait for k_clk_period*1;
-		  assert w_stoplight = "010" report "bad reset" severity failure;
+		  assert w_blinker_L = "000" report "bad reset" severity failure;
+		  assert w_blinker_R = "000" report "bad reset" severity failure;
 		
 		w_reset <= '0';
 		wait for k_clk_period*1;
 		
-		-- red light
-		w_C <= '0'; wait for k_clk_period;
-          assert w_stoplight = "100" report "should be red when no car" severity failure;
-		-- car shows up at red light
-        w_C <= '1'; wait for k_clk_period;
-            assert w_stoplight = "001" report "should be green when car present" severity failure;
-        wait for k_clk_period * 3; -- stay green
-            assert w_stoplight = "001" report "should be green when car present" severity failure;
-        -- go to yellow
-        w_C <= '0'; wait for k_clk_period;
-            assert w_stoplight = "010" report "should be yellow when cars done" severity failure;
-        wait for k_clk_period; -- time to go to red
-            assert w_stoplight = "100" report "did not go red after yellow" severity failure;
-        
-        -- reset and test yellow to red even if car
-        w_reset <= '1'; w_C <= '1';
-            wait for k_clk_period;
-        w_reset <= '0';
-          assert w_stoplight = "010" report "bad reset" severity failure;
-        wait for k_clk_period;
-            assert w_stoplight = "100" report "skipped red after yellow" severity failure;
-        wait for k_clk_period;
-            assert w_stoplight = "001" report "should be green when car present" severity failure;
-	
+		-- right blinker test
+    w_right <= '1'; wait for k_clk_period;
+      assert w_blinker_R = "001" report "initial blinker" severity failure;
+      wait for k_clk_period;
+      assert w_blinker_R = "011" report "second blinker" severity failure;
+      wait for k_clk_period;
+      assert w_blinker_R = "111" report "full blinker" severity failure;
+ 
 		wait;
 	end process;
 	-----------------------------------------------------
