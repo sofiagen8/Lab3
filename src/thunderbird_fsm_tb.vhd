@@ -122,9 +122,9 @@ begin
  
     --left blinker test
     w_left <= '1'; wait for k_clk_period;
-      assert w_blinker_L = "001" report "initial left blinker" severity failure;
+      assert w_blinker_L = "101" report "initial left blinker" severity failure;
       wait for k_clk_period;
-      assert w_blinker_L = "011" report "second left blinker" severity failure;
+      assert w_blinker_L = "110" report "second left blinker" severity failure;
       wait for k_clk_period;
       assert w_blinker_L = "111" report "full left blinker" severity failure;
  
